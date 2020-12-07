@@ -13,20 +13,14 @@ namespace MultimediaApp
 			public char Key { get; set; }
 			public string Value { get; set; }
 
-			public OneLineNode(string temp1, string temp2)
+			public OneLineNode(char key, string value)
 			{
-				Key = temp1[0];
-				Value = temp2;
-			}
-
-			public OneLineNode(char temp1, string temp2)
-			{
-				Key = temp1;
-				Value = temp2;
+				Key = key;
+				Value = value;
 			}
 
 			public OneLineNode(string value)
-			{ 
+			{
 				Key = value[0];
 				Value = value.Substring(2);
 			}
@@ -92,11 +86,6 @@ namespace MultimediaApp
 			return result.ToArray();
 		}
 
-		/// <summary>
-		/// 构建哈弗曼树
-		/// </summary>
-		/// <param name="sources">权值数组</param>
-		/// <returns>返回哈弗曼树根</returns>
 		private Node CreateHuffmanTree(Node[] sources)
 		{
 			Node result = null;
@@ -131,12 +120,7 @@ namespace MultimediaApp
 			return result;
 		}
 
-		/// <summary>
-		/// 字符串转换为哈弗曼代码.当然可以改成二进制数据
-		/// </summary>
-		/// <param name="key">编码字典</param>
-		/// <param name="str">传入字符串</param>
-		/// <returns>编码后的字符串</returns>
+		// 字符串转换为哈弗曼代码.当然可以改成二进制数据
 		public string StringToHuffmanCode(out Dictionary<char, string> key, string str)
 		{
 			string result = "";
@@ -164,15 +148,11 @@ namespace MultimediaApp
 				OneLineNode oneLine = new OneLineNode(match.Value);
 				result.Add(oneLine.Key, oneLine.Value);
 			}
-			
+
 			return result;
 		}
 
-		/// <summary>
-		/// 创建哈弗曼代码字典
-		/// </summary>
-		/// <param name="hTree">哈弗曼树</param>
-		/// <returns></returns>
+		//哈弗曼代码字典
 		private Dictionary<char, string> CreateHuffmanDict(Node hTree)
 		{
 			return CreateHuffmanDict("", hTree);
@@ -205,12 +185,7 @@ namespace MultimediaApp
 			return result;
 		}
 
-		/// <summary>
-		/// 源字符串转换到哈弗曼代码
-		/// </summary>
-		/// <param name="source">源字符串</param>
-		/// <param name="hfdict">哈弗曼代码字典</param>
-		/// <returns>编译后代码</returns>
+		//源字符串转换到哈弗曼代码
 		private string ToHuffmanCode(string source, Dictionary<char, string> hfdict)
 		{
 			string result = "";
@@ -223,12 +198,6 @@ namespace MultimediaApp
 			return result;
 		}
 
-		/// <summary>
-		/// 解析回字符串
-		/// </summary>
-		/// <param name="code">哈弗曼代码</param>
-		/// <param name="dictionary">哈弗曼代码字典</param>
-		/// <returns>解析后字符串</returns>
 		public string HuffmanCodeToString(Dictionary<char, string> dictionary, string code)
 		{
 			int errortimes = 0;
@@ -248,7 +217,7 @@ namespace MultimediaApp
 						{
 							result += item.Key;
 							i += item.Value.Length;
-							
+
 							break;
 						}
 					}
@@ -272,6 +241,5 @@ namespace MultimediaApp
 
 			return result;
 		}
-
 	}
 }

@@ -4,20 +4,113 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:MultimediaApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
 	mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
 	Unloaded="Page_Unloaded">
 
 	<Grid>
 		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="2*"/>
 			<ColumnDefinition Width="1*"/>
-			<ColumnDefinition Width="1*"/>
+			<ColumnDefinition Width="2*"/>
 		</Grid.ColumnDefinitions>
 		<Grid Grid.Column="0">
+			<TextBlock Text="Original Signal" HorizontalAlignment="Center"/>
 			<canvas:CanvasControl x:Name="canvas_Left" Draw="canvas_Left_Draw"/>
 		</Grid>
-		<Grid Grid.Column="0">
+		<Grid x:Name="Grid_PCMParameterRoot" Grid.Column="1" Padding="8,8,8,8">
+			<StackPanel Orientation="Vertical" Margin="8,8,8,8">
+				<Button x:Name="Button_ResetParameters" Click="Button_ResetParameters_Click"
+						Style="{StaticResource ButtonRevealStyle}" Content="Reset" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Right"/>
+
+				<Grid  Margin="0,8,0,0">
+					<Button x:Name="Button" Click="Button_ClickAsync"
+					Style="{StaticResource ButtonRevealStyle}" HorizontalAlignment="Stretch">
+						<TextBlock Text="GetSignals"/>
+					</Button>
+				</Grid>
+				<ProgressBar x:Name="ProgressBar_GeneratingSignal" IsIndeterminate="False" ShowPaused="False" ShowError="False"
+							 Visibility="Collapsed"/>
+				<StackPanel Margin="0,8,0,8">
+					<Grid>
+						<TextBlock Text="Harmonics"/>
+						<TextBlock Text="{x:Bind Slider_Harmonics.Value.ToString(),Mode=OneWay}" 
+									HorizontalAlignment="Right" MinWidth="8"/>
+					</Grid>
+					<Slider x:Name="Slider_Harmonics" Value="0" Minimum="1" Maximum="10" SmallChange="1"/>
+				</StackPanel>
+
+				<StackPanel Margin="0,8,0,8">
+					<Grid>
+						<TextBlock Text="Duration"/>
+						<TextBlock Text="{x:Bind Slider_Duration.Value.ToString(),Mode=OneWay}" 
+									HorizontalAlignment="Right" MinWidth="8"/>
+					</Grid>
+					<Slider x:Name="Slider_Duration"
+							Value="20" Minimum="1" Maximum="100" SmallChange="0.1"/>
+				</StackPanel>
+
+				<StackPanel Margin="0,8,0,8">
+					<Grid>
+						<TextBlock Text="Frequency"/>
+						<TextBlock Text="{x:Bind Slider_Frequency.Value.ToString(),Mode=OneWay}" 
+									HorizontalAlignment="Right" MinWidth="8"/>
+					</Grid>
+					<Slider x:Name="Slider_Frequency"
+							Value="10" Minimum="1" SmallChange="0.1"/>
+				</StackPanel>
+				<StackPanel Margin="0,8,0,8">
+					<Grid>
+						<TextBlock Text="Amplitude"/>
+						<TextBlock Text="{x:Bind Slider_Amplitude.Value.ToString(),Mode=OneWay}" 
+									HorizontalAlignment="Right" MinWidth="8"/>
+					</Grid>
+					<Slider x:Name="Slider_Amplitude"
+							Value="10" Minimum="1" SmallChange="1"/>
+				</StackPanel>
+
+				<StackPanel Orientation="Vertical" Margin="0,8,0,8">
+					<TextBlock Text="Code"/>
+					<Grid Margin="0,8,0,8">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<Grid Grid.Column="0" Margin="0,0,4,0">
+							<ListView x:Name="ListView_PCM" ScrollViewer.VerticalScrollBarVisibility="Auto" 
+									MinHeight="200" MaxHeight="500" BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="4" 
+								  >
+								<ListView.ItemTemplate>
+									<DataTemplate x:DataType="local:PCMListView_Item">
+										<TextBlock Text="{x:Bind Value}" x:Phase="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+						</Grid>
+
+						<Grid Grid.Column="1" Margin="4,0,0,0">
+							<ListView x:Name="ListView_ADPCM" ScrollViewer.VerticalScrollBarVisibility="Auto"
+									  MinHeight="200" MaxHeight="500" BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="4"
+								  >
+								<ListView.ItemTemplate>
+									<DataTemplate x:DataType="local:PCMListView_Item">
+										<TextBlock Text="{x:Bind Value}" x:Phase="1" Margin="0,2,0,2"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+						</Grid>
+					</Grid>
+
+				</StackPanel>
+
+
+			</StackPanel>
+
+		</Grid>
+		<Grid Grid.Column="2">
+			<TextBlock Text="Coded Signal" HorizontalAlignment="Center" />
 			<canvas:CanvasControl x:Name="canvas_Right" Draw="canvas_Right_Draw"/>
 		</Grid>
 

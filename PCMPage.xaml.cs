@@ -1,82 +1,118 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Media.Capture;
-using Windows.Media.Core;
-using Windows.Media.MediaProperties;
-using Windows.Media.Playback;
-using Windows.Storage;
+using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace MultimediaApp
 {
-	/// <summary>
-	/// 可用于自身或导航至 Frame 内部的空白页。
-	/// </summary>
+	public class PCMListView_Item
+	{
+		//public string Key { get; private set; }
+		public string Value { get; private set; }
+
+		public PCMListView_Item(string value)
+		{
+			this.Value = value;
+		}
+	}
+
 	public sealed partial class PCMPage : Page
 	{
-		SignalGenerator generator;
+		SignalGenerator generator = new SignalGenerator(1);
 		Signal signals;
+		LinkedList<PCMFrame> pcmFrames;
+		LinkedList<ADPCMFrame> adpcmFrames;
+
+		int harmonics = 1;
+		double duration = 20;
+		double frequency = 10;
+		double amplitude = 10;
+
 
 		public PCMPage()
 		{
 			this.InitializeComponent();
-
+			signals = generator.GenerateSignal(duration, frequency, amplitude);
+			PCMCoding();
+			AddToPCMLiseView();
 		}
 
-		private async void BtmStaticMusicPlay_ClickAsync(object sender, RoutedEventArgs e)
+		private async void Button_ClickAsync(object sender, RoutedEventArgs e)
 		{
-			int harmonics = 1;
+			harmonics = (int)Slider_Harmonics.Value;
+			if (harmonics >= 3)
+			{
+				ProgressBar_GeneratingSignal.Visibility = Visibility.Visible;
+				ProgressBar_GeneratingSignal.IsIndeterminate = true;
+				ProgressBar_GeneratingSignal.ShowPaused = false;
+			}
+			duration = Slider_Duration.Value;
+			frequency = Slider_Frequency.Value;
+			amplitude = Slider_Amplitude.Value;
 
-			double duration = 1;
-			double frequency = 50;
-			double amplitude = 1;
+			await Task.Run(() =>
+			{
+				generator = new SignalGenerator(harmonics);
+				signals = generator.GenerateSignal(duration, frequency, amplitude);
+			});
+			canvas_Left.Invalidate();
 
-			generator = new SignalGenerator(harmonics);
-			signals = generator.GenerateSignal(duration, frequency, amplitude);
+			PCMCoding();
 
+			AddToPCMLiseView();
+			ProgressBar_GeneratingSignal.ShowPaused = true;
+			ProgressBar_GeneratingSignal.Visibility = Visibility.Collapsed;
+		}
+
+		private void PCMCoding()
+		{
 			//PCM encoding
-			Debug.WriteLine("PCM encoding");
 			PCMEncoder pcmEncoder = new PCMEncoder();
 			int pcmBitResolution = 8;
-			LinkedList<PCMFrame> pcmFrames = pcmEncoder.GeneratePCMFramesFrom(signals, pcmBitResolution);
-
-			// ADPCM encoding
-			Debug.WriteLine("ADPCM encoding");
-			ADPCMEncoder adpcmEncoder = new ADPCMEncoder();
-			LinkedList<ADPCMFrame> adpcmFrames = adpcmEncoder.EncodeADPCMFrames(pcmFrames);
-
-			// ADPCM decoding
-			ADPCMDecoder adpcmDecoder = new ADPCMDecoder();
-			pcmFrames = adpcmDecoder.DecodeADPCMFrames(adpcmFrames);
-
-
-			//PCM decoding
-			double samplingFrequency = 2 * frequency * Math.Pow(2, harmonics - 1);
-			double maxAmplitude = signals.GetSignalMaxAmplitude();
-			PCMDecoder pcmDecoder = new PCMDecoder();
-
-			LinkedList<Sample> samplesDecoded = pcmDecoder.ConvertPCMToSignal(pcmFrames, maxAmplitude, pcmBitResolution, 100);
-
-			// Print decoded signalS
-
-			foreach (var item in samplesDecoded)
-			{
-				Debug.WriteLine(item.value);
-			}
+			pcmFrames = pcmEncoder.GeneratePCMFramesFrom(signals, pcmBitResolution);
 		}
+
+		private void AddToPCMLiseView()
+		{
+			ObservableCollection<PCMListView_Item> observablePCMFrames = new ObservableCollection<PCMListView_Item>();
+			foreach (var item in pcmFrames)
+			{
+				observablePCMFrames.Add(new PCMListView_Item(item.value));
+			}
+			ListView_PCM.ItemsSource = observablePCMFrames;
+		}
+
+		/*
+
+
+		// ADPCM encoding
+		Debug.WriteLine("ADPCM encoding");
+		ADPCMEncoder adpcmEncoder = new ADPCMEncoder();
+		LinkedList<ADPCMFrame> adpcmFrames = adpcmEncoder.EncodeADPCMFrames(pcmFrames);
+
+		// ADPCM decoding
+		ADPCMDecoder adpcmDecoder = new ADPCMDecoder();
+		pcmFrames = adpcmDecoder.DecodeADPCMFrames(adpcmFrames);
+
+
+		//PCM decoding
+		double samplingFrequency = 2 * frequency * Math.Pow(2, harmonics - 1);
+		double maxAmplitude = signals.GetSignalMaxAmplitude();
+		PCMDecoder pcmDecoder = new PCMDecoder();
+
+		LinkedList<Sample> samplesDecoded = pcmDecoder.ConvertPCMToSignal(pcmFrames, maxAmplitude, pcmBitResolution, 100);
+
+		// Print decoded signalS
+
+		foreach (var item in samplesDecoded)
+		{
+			Debug.WriteLine(item.value);
+		}
+		*/
 
 
 		private void canvas_Left_Draw(Microsoft.Graphics.Canvas.UI.Xaml.CanvasControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasDrawEventArgs args)
@@ -85,6 +121,16 @@ namespace MultimediaApp
 			int Height = (int)sender.ActualHeight;
 
 			args.DrawingSession.DrawLine(0, Height / 2, Width, Height / 2, Colors.Azure);
+			if (signals != null)
+			{
+				if (signals.samples.Count != 0)
+				{
+					foreach (var item in signals.samples)
+					{
+						args.DrawingSession.FillCircle((float)(item.time * 20), (float)((Height / 2) + (item.value * 10)), 2, Colors.White);
+					}
+				}
+			}
 		}
 
 		private void canvas_Right_Draw(Microsoft.Graphics.Canvas.UI.Xaml.CanvasControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasDrawEventArgs args)
@@ -92,10 +138,37 @@ namespace MultimediaApp
 
 		}
 
+		private void Button_ResetParameters_Click(object sender, RoutedEventArgs e)
+		{
+			harmonics = 1;
+			duration = 20;
+			frequency = 10;
+			amplitude = 10;
+			Slider_Harmonics.Value = harmonics;
+			Slider_Duration.Value = duration;
+			Slider_Frequency.Value = frequency;
+			Slider_Amplitude.Value = amplitude;
+
+			generator = new SignalGenerator(harmonics);
+			signals = generator.GenerateSignal(duration, frequency, amplitude);
+
+			PCMCoding();
+			AddToPCMLiseView();
+
+			ProgressBar_GeneratingSignal.ShowPaused = true;
+			ProgressBar_GeneratingSignal.Visibility = Visibility.Collapsed;
+			canvas_Left.Invalidate();
+		}
+
 		private void Page_Unloaded(object sender, RoutedEventArgs e)
 		{
-
+			canvas_Left.RemoveFromVisualTree();
+			canvas_Left = null;
+			canvas_Right.RemoveFromVisualTree();
+			canvas_Right = null;
 		}
+
+
 
 		/*
 		private void BtmStaticMusicStop_Click(object sender, RoutedEventArgs e)

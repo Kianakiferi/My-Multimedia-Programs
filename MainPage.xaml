@@ -17,18 +17,6 @@
 	<Grid>
 		<TextBlock x:Name="AppTitleText" Text="My Coding Demo"  Style="{StaticResource CaptionTextBlockStyle}" Margin="12,8,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.ZIndex="50"/>
 
-		
-		<CommandBar Background="Transparent" DefaultLabelPosition="Right" IsSticky="True" Margin="0,32,0,0" Grid.ColumnSpan="2">
-			<AppBarButton x:Name="BtmCommandBar_Refresh" Click="BtmCommandBar_Refresh_Click" Icon="Refresh" Label="Refresh" />
-			<AppBarButton x:Name="BtmCommandBar_GenerateRandomText" Click="BtmCommandBar_GenerateRandomText_Click" Label="Generate Random Text">
-				<AppBarButton.Icon>
-					<FontIcon Glyph="&#xE8B1;"/>
-				</AppBarButton.Icon>
-			</AppBarButton>
-			<AppBarButton IsEnabled="False">
-			</AppBarButton>
-		</CommandBar>
-		
 		<muxc:NavigationView x:Name="NavView"
 				Loaded="NavView_Loaded"
 				ItemInvoked="NavView_ItemInvoked"
@@ -93,10 +81,10 @@
 		<VisualStateManager.VisualStateGroups>
 			<VisualStateGroup>
 				<VisualState>
-					<VisualState.StateTriggers>
+					<!--<VisualState.StateTriggers>
 						<AdaptiveTrigger
-                        MinWindowWidth="{Binding  NavViewCompactModeThresholdWidth}"/>
-					</VisualState.StateTriggers>
+                        MinWindowWidth="400"/>
+					</VisualState.StateTriggers>-->
 					<VisualState.Setters>
 						<!-- Remove the next 3 lines for left-only navigation. -->
 

@@ -1,60 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using static MultimediaApp.SignalGenerator;
 
 namespace MultimediaApp
 {
+	//单个信号样本
 	public class Sample
+	{
+		public double time;
+		public double value;
+
+		public Sample(double time, double value)
 		{
-			public double time;
-			public double value;
-
-			public Sample(double time, double value)
-			{
-				this.time = time;
-				this.value = value;
-			}
+			this.time = time;
+			this.value = value;
 		}
+	}
 
+	//信号List
 	public class Signal
+	{
+		public LinkedList<Sample> samples;
+
+		public Signal(double duration, double samplingFrequency)
 		{
-			public LinkedList<Sample> samples;
+			this.samples = new LinkedList<Sample>();
 
-			public Signal(double duration, double samplingFrequency)
+			double time = 0;
+			while (time < duration)
 			{
-				this.samples = new LinkedList<Sample>();
-
-				double time = 0;
-				while (time < duration)
-				{
-					samples.AddLast(new Sample(time, 0));
-					time += (1 / samplingFrequency);
-				}
-			}
-
-			public double GetSignalMaxAmplitude()
-			{
-				double maxAmplitude = 0;
-				double value;
-				Sample sample;
-
-				foreach (var item in samples)
-				{
-					sample = item;
-					value = Math.Abs(sample.value);
-
-					if (value > maxAmplitude)
-					{
-						maxAmplitude = value;
-					}
-				}
-				return maxAmplitude;
+				samples.AddLast(new Sample(time, 0));
+				time += (1 / samplingFrequency);
 			}
 		}
+
+		public double GetSignalMaxAmplitude()
+		{
+			double maxAmplitude = 0;
+			double value;
+			Sample sample;
+
+			//遍历查找最大
+			foreach (var item in samples)
+			{
+				sample = item;
+				value = Math.Abs(sample.value);
+
+				if (value > maxAmplitude)
+				{
+					maxAmplitude = value;
+				}
+			}
+			return maxAmplitude;
+		}
+	}
+
+	//信号产生方法封装类
 	public class SignalGenerator
 	{
 		private SignalFunction signalFunction;
@@ -100,11 +102,11 @@ namespace MultimediaApp
 			double samplingFrequency = 2 * frequency * Math.Pow(2, harmonics - 1);
 			Signal signal = new Signal(duration, samplingFrequency);
 
-			int index;
 			double time;
 			double value;
 			double accumulatedValue;
 
+			int index;
 			for (int n = 1; n <= harmonics; n++)
 			{
 				signalFunction.SetUpFunctionParameters(amplitude, frequency);
@@ -126,6 +128,7 @@ namespace MultimediaApp
 		}
 	}
 
+	//B树
 	public class BinaryString
 	{
 		public static int CalculateIntegerFrom(string binaryString)
@@ -243,15 +246,14 @@ namespace MultimediaApp
 			return result;
 		}
 
-
+		//获取index处的字符，76543210，倒序
 		public static string GetCharAt(string binaryString, int index)
 		{
 			//return 	binaryString.Substring((binaryString.Length - 1 - index), binaryString.Length - index);
 			return binaryString.Substring((binaryString.Length - 1 - index), 1);
 		}
 
-		//--------------------------------------------------------------------------//
-
+		//无用
 		public static string XOR(string binaryString1, string binaryString2)
 		{
 			string result = "";
@@ -330,7 +332,6 @@ namespace MultimediaApp
 		}
 	}
 
-
 	public class PCMFrame
 	{
 		public string value;
@@ -354,14 +355,12 @@ namespace MultimediaApp
 		{
 			LinkedList<PCMFrame> pcmFrames = new LinkedList<PCMFrame>();
 
-			// PCM parameters
+			// PCM 参数们
 			this.bitResolution = bitResolution;
 			double maxAmplitude = GetMaxAmplitudeFrom(signal);
 			int quantizationLevels = (int)Math.Pow(2, bitResolution) - 1;
 			double quantizationStep = (double)(maxAmplitude / (0.5 * quantizationLevels - 1));
 
-
-			//IEnumerator<Sample> enumerator = signal.Samples.GetEnumerator();
 			Sample sample;
 			string pcmBits;
 
@@ -377,7 +376,6 @@ namespace MultimediaApp
 
 		public string CodeSample(Sample sample, double quantizationStep)
 		{
-
 			double value = sample.value;
 
 			int level = (int)Math.Round((Math.Abs(value) / quantizationStep));
@@ -385,13 +383,13 @@ namespace MultimediaApp
 			string code = Convert.ToString(level, 2);
 			int lengthOfCode = code.Length;
 
-			// fill with zeros...
+			//补充位数（填充0）
 			for (int i = 0; i < bitResolution - lengthOfCode; i++)
 			{
 				code = "0" + code;
 			}
 
-			// add sign
+			//Add sign
 			string sign;
 
 			if (value >= 0)
@@ -410,9 +408,6 @@ namespace MultimediaApp
 
 		public double GetMaxAmplitudeFrom(Signal signal)
 		{
-
-			//Iterator<Sample> it = signal.getSamples().iterator();
-
 			double maxAmplitude = 0;
 			double value;
 			Sample sample;
@@ -426,12 +421,10 @@ namespace MultimediaApp
 				{
 					maxAmplitude = value;
 				}
-
 			}
 
 			return maxAmplitude;
 		}
-
 	}
 
 	public class PCMDecoder
@@ -444,8 +437,6 @@ namespace MultimediaApp
 			int quantizationLevels = (int)Math.Pow(2, bitResolution) - 1;
 			double quantizationStep = (double)(maxAmplitude / (0.5 * quantizationLevels - 1));
 
-			//Iterator<PCMFrame> pcmIterator = pcmFrames.iterator();
-
 			double time = 0;
 			double sampleValue;
 
@@ -455,22 +446,11 @@ namespace MultimediaApp
 				samples.AddLast(new Sample(time, sampleValue));
 				time += 1 / samplingFrequency;
 			}
-
-			//while (pcmIterator.hasNext())
-			//{
-
-			//	pcmFrame = pcmIterator.next();
-			//	sampleValue = decodePCMFrame(pcmFrame, quantizationStep);
-			//	samples.add(new Sample(time, sampleValue));
-			//	time = time + 1 / samplingFrequency;
-			//}
-
 			return samples;
 		}
 
 		public double DecodePCMFrame(PCMFrame pcmFrame, double quantizationStep)
 		{
-
 			string binaryString = pcmFrame.value;
 			int value = BinaryString.CalculateIntegerFrom(binaryString);
 
@@ -478,7 +458,6 @@ namespace MultimediaApp
 
 			return sampleValue;
 		}
-
 	}
 
 	public class StepSizeBuffer
@@ -518,8 +497,6 @@ namespace MultimediaApp
 
 		public static int CalcuateStepSizeValueFor(ADPCMFrame adpcmFrame, int previousStepSize)
 		{
-
-
 			String adpcmValue = adpcmFrame.value;
 			int index;
 			int indexChange = 0;
@@ -536,7 +513,6 @@ namespace MultimediaApp
 			index = GetIndexFromStepSizeTable(previousStepSize) + indexChange;
 
 			return GetStepSizeValueFrom(index);
-
 		}
 
 		public static int GetIndexFromStepSizeTable(int stepSize)

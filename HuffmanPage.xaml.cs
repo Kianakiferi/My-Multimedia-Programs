@@ -8,10 +8,6 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Navigation;
-
-// https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
 namespace MultimediaApp
 {
@@ -28,7 +24,7 @@ namespace MultimediaApp
 	}
 
 	public sealed partial class HuffmanPage : Page
-	{			
+	{
 		private HuffmanCoding huffman;
 		private Dictionary<char, string> keyAndValues;
 		List<HuffmanCoding.OneLineNode> dicNodes;
@@ -226,6 +222,35 @@ namespace MultimediaApp
 			}
 			DataPackage dataPackage = new DataPackage();
 			dataPackage.SetText(dicToText);
+			Clipboard.SetContent(dataPackage);
+		}
+
+		private int offset = 45;
+		private void Button_GenerateRandomText_Click(object sender, RoutedEventArgs e)
+		{
+			int randomStringLength = 64;
+
+			string randomStr = string.Empty;
+			long num2 = DateTime.Now.Ticks + this.offset;
+			this.offset++;
+			Random random = new Random(((int)(((ulong)num2) & 0xffffffffL)) | ((int)(num2 >> this.offset)));
+			for (int i = 0; i < randomStringLength; i++)
+			{
+				char ch;
+				int num = random.Next();
+				if ((num % 2) == 0)
+				{
+					ch = (char)(0x30 + ((ushort)(num % 10)));
+				}
+				else
+				{
+					ch = (char)(0x41 + ((ushort)(num % 0x1a)));
+				}
+				randomStr = randomStr + ch.ToString();
+			}
+
+			DataPackage dataPackage = new DataPackage();
+			dataPackage.SetText(randomStr);
 			Clipboard.SetContent(dataPackage);
 		}
 	}

@@ -180,42 +180,6 @@ namespace MultimediaApp
 
 		//}
 
-
-		private void BtmCommandBar_Refresh_Click(object sender, RoutedEventArgs e)
-		{
-			Type nowPage = ContentFrame.CurrentSourcePageType;
-			Debug.WriteLine(nowPage);
-		}
-
-		private int offset = 0;
-		private void BtmCommandBar_GenerateRandomText_Click(object sender, RoutedEventArgs e)
-		{
-			int randomStringLength = 64;
-
-			string randomStr = string.Empty;
-			long num2 = DateTime.Now.Ticks + this.offset;
-			this.offset++;
-			Random random = new Random(((int)(((ulong)num2) & 0xffffffffL)) | ((int)(num2 >> this.offset)));
-			for (int i = 0; i < randomStringLength; i++)
-			{
-				char ch;
-				int num = random.Next();
-				if ((num % 2) == 0)
-				{
-					ch = (char)(0x30 + ((ushort)(num % 10)));
-				}
-				else
-				{
-					ch = (char)(0x41 + ((ushort)(num % 0x1a)));
-				}
-				randomStr = randomStr + ch.ToString();
-			}
-
-			DataPackage dataPackage = new DataPackage();
-			dataPackage.SetText(randomStr);
-			Clipboard.SetContent(dataPackage);
-		}
-
 		private void NavView_PaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs args)
 		{
 			AppTitleText.Visibility = Visibility.Collapsed;

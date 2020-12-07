@@ -16,22 +16,5 @@ namespace MultimediaApp
 		{
 			this.InitializeComponent();
 		}
-
-		private void Grid_GragOver(object sender, DragEventArgs e)
-		{
-			e.AcceptedOperation = DataPackageOperation.Copy;
-		}
-
-		private async void Grid_Drop(object sender, DragEventArgs e)
-		{
-			if (e.DataView.Contains(StandardDataFormats.StorageItems))
-			{
-				var items = await e.DataView.GetStorageItemsAsync();
-				if (items.Count > 0)
-				{
-					Frame.Navigate(typeof(CreatePage), items);
-				}
-			}
-		}
 	}
 }
