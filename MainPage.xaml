@@ -1,0 +1,114 @@
+﻿<Page
+    x:Class="MultimediaApp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MultimediaApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:muxc="using:Windows.UI.Xaml.Controls" 
+	xmlns:muxm="using:Windows.UI.Xaml.Media"
+	mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+	<Page.Resources>
+		<Thickness x:Key="NavigationViewHeaderMargin">12,64</Thickness>
+
+	</Page.Resources>
+	<Grid>
+		<TextBlock x:Name="AppTitleText" Text="My Coding Demo"  Style="{StaticResource CaptionTextBlockStyle}" Margin="12,8,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.ZIndex="50"/>
+
+		
+		<CommandBar Background="Transparent" DefaultLabelPosition="Right" IsSticky="True" Margin="0,32,0,0" Grid.ColumnSpan="2">
+			<AppBarButton x:Name="BtmCommandBar_Refresh" Click="BtmCommandBar_Refresh_Click" Icon="Refresh" Label="Refresh" />
+			<AppBarButton x:Name="BtmCommandBar_GenerateRandomText" Click="BtmCommandBar_GenerateRandomText_Click" Label="Generate Random Text">
+				<AppBarButton.Icon>
+					<FontIcon Glyph="&#xE8B1;"/>
+				</AppBarButton.Icon>
+			</AppBarButton>
+			<AppBarButton IsEnabled="False">
+			</AppBarButton>
+		</CommandBar>
+		
+		<muxc:NavigationView x:Name="NavView"
+				Loaded="NavView_Loaded"
+				ItemInvoked="NavView_ItemInvoked"
+				BackRequested="NavView_BackRequested"
+				IsBackButtonVisible="Collapsed" 
+				PaneClosing="NavView_PaneClosing"
+				PaneOpening="NavView_PaneOpening"
+				>
+			<muxc:NavigationView.HeaderTemplate>
+				<DataTemplate x:Name="MyNavigationgViewHeader">
+					<Grid Margin="16,-14,0,0">
+						<TextBlock x:Name="Header" Style="{StaticResource TitleTextBlockStyle}"
+								   FontSize="28" VerticalAlignment="Center" Text="{Binding}"/>
+					</Grid>
+				</DataTemplate>
+			</muxc:NavigationView.HeaderTemplate>
+			<muxc:NavigationView.MenuItems>
+				
+				<!--<muxc:NavigationViewItem Content="Zip Files" Tag="filePage" >
+					<NavigationViewItem.Icon>
+						<FontIcon Glyph="&#xE8B7;"/>
+					</NavigationViewItem.Icon>
+				</muxc:NavigationViewItem>
+				<muxc:NavigationViewItem Content="New Zip" Icon="Add" Tag="createPage" />
+				<muxc:NavigationViewItem Content="Recent" Tag="recentPage" >
+					<NavigationViewItem.Icon>
+						<FontIcon Glyph="&#xE81C;"/>
+					</NavigationViewItem.Icon>
+				</muxc:NavigationViewItem>-->
+
+				<!-- <muxc:NavigationViewItemHeader x:Name="MainPagesHeader"
+                                           Content="Statistical Coding" />
+
+				<muxc:NavigationViewItemSeparator/>
+				-->
+				<muxc:NavigationViewItem Content="Home" Icon="Home" Tag="home" />
+				
+				<muxc:NavigationViewItem Content="Huffman Coding" Tag="huffman">
+					<NavigationViewItem.Icon>
+						<FontIcon Glyph="&#xF003;"/>
+					</NavigationViewItem.Icon>
+				</muxc:NavigationViewItem>
+				
+				<muxc:NavigationViewItem Content="PCM Coding" Tag="pcm">
+					<NavigationViewItem.Icon>
+						<FontIcon Glyph="&#xE9D2;"/>
+					</NavigationViewItem.Icon>
+				</muxc:NavigationViewItem>
+				
+				<muxc:NavigationViewItem Content="Jpeg Coding" Tag="jpeg">
+					<NavigationViewItem.Icon>
+						<FontIcon Glyph="&#xE91B;"/>
+					</NavigationViewItem.Icon>
+				</muxc:NavigationViewItem>
+
+			</muxc:NavigationView.MenuItems>
+			<Frame x:Name="ContentFrame"  
+				   NavigationFailed="ContentFrame_NavigationFailed"/>
+
+		</muxc:NavigationView>
+
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup>
+				<VisualState>
+					<VisualState.StateTriggers>
+						<AdaptiveTrigger
+                        MinWindowWidth="{Binding  NavViewCompactModeThresholdWidth}"/>
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<!-- Remove the next 3 lines for left-only navigation. -->
+
+						<!-- Leave the next line for left-only navigation. -->
+						<Setter Target="ContentFrame.Padding">
+							<Setter.Value>
+								<Thickness>24,0,16,16</Thickness>
+							</Setter.Value>
+						</Setter>
+					</VisualState.Setters>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
+	</Grid>
+</Page>

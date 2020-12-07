@@ -1,0 +1,53 @@
+﻿<Page
+    x:Class="MultimediaApp.PCMPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MultimediaApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+	mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+	Unloaded="Page_Unloaded">
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="1*"/>
+			<ColumnDefinition Width="1*"/>
+		</Grid.ColumnDefinitions>
+		<Grid Grid.Column="0">
+			<canvas:CanvasControl x:Name="canvas_Left" Draw="canvas_Left_Draw"/>
+		</Grid>
+		<Grid Grid.Column="0">
+			<canvas:CanvasControl x:Name="canvas_Right" Draw="canvas_Right_Draw"/>
+		</Grid>
+
+		<!--<Pivot Grid.Row="0">
+			<PivotItem Header="Recoding">
+				<Grid>
+					<StackPanel Orientation="Vertical" VerticalAlignment="Center">
+						<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+							<Button x:Name="BtmRecode" Click="BtmRecode_ClickAsync" 
+								Style="{StaticResource ButtonRevealStyle}" Content="Recode"/>
+							<Button x:Name="BtmPause" Click="BtmPause_ClickAsync" 
+								Style="{StaticResource ButtonRevealStyle}" Content="Pause"/>
+							<Button x:Name="BtmStop" Click="BtmStop_ClickAsync" 
+								Style="{StaticResource ButtonRevealStyle}" Content="Stop"/>
+						</StackPanel>
+						<ProgressBar x:Name="ProgressBar_Recoding" IsIndeterminate="True" ShowPaused="True" ShowError="False" MaxWidth="400" Margin="0,16,0,0"/>
+
+						<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0">
+							<Button x:Name="BtmMusicPlay" Click="BtmMusicPlay_ClickAsync" 
+								Style="{StaticResource ButtonRevealStyle}" Content="PlayMusic" />
+							<Button x:Name="BtmMusicPause" Click="BtmMusicPause_ClickAsync" 
+								Style="{StaticResource ButtonRevealStyle}" Content="Pause"/>
+							<Button x:Name="BtmMusicStop" Click="BtmMusicStop_Click" 
+								Style="{StaticResource ButtonRevealStyle}" Content="Stop" />
+						</StackPanel>
+					</StackPanel>
+
+				</Grid>
+			</PivotItem>
+		</Pivot>-->
+	</Grid>
+
+</Page>

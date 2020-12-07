@@ -1,0 +1,21 @@
+﻿<Page
+    x:Class="MultimediaApp.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MultimediaApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+	<Grid x:Name="HomePageGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" AllowDrop="True" DragOver="Grid_GragOver" Drop="Grid_Drop">
+		<Rectangle Stroke="#FF303030" RadiusX="5" RadiusY="5" StrokeThickness="3" StrokeDashArray="5,5" StrokeDashCap="Round" />
+		
+		<FontIcon HorizontalAlignment="Center" VerticalAlignment="Center" Glyph ="&#xE710;" FontSize="64" Foreground="Gray" />
+		<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,36,0,0">
+			<Image x:Name="Image" HorizontalAlignment="Center"  VerticalAlignment="Center" Height="500" Width="500" Margin="8,8,8,8" Canvas.ZIndex="6"/>
+			<TextBlock x:Name="TextBlk_FilePath" Text="Please drag in files or folders" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" />
+		</StackPanel>
+		
+	</Grid>
+</Page>
