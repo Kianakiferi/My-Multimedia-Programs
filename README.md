@@ -1,5 +1,4 @@
 # My-Multimedia-Programs
-<<<<<<< HEAD
  Huffman, PCM, ADPCM
 ### Huffman Coding
 - Encode from .txt file
@@ -86,11 +85,4 @@ LinkedList<Sample> samplesList_Decoded_PCM = pcmDecoder.ConvertPCMToSignal(pcmFr
 
 LinkedList<Sample> samplesList_Decoded_ADPCM = pcmDecoder.ConvertPCMToSignal(pcmFrames, maxAmplitude, bitResolution, samplingFrequency);
 ```
-=======
- Huffman, PCM, ADPCM...
-### Huffman Page:
- Coding From .TXT, Keyboard.
-
-### PCM Page:
- Coding Signals. PCM Coding, ADPCM Coding.
->>>>>>> 4d7b496ca1746fe51d909c1985406768d894a38b
+Signals => pcmFrames
