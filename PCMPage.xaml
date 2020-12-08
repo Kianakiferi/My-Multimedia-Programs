@@ -10,7 +10,11 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
 	Unloaded="Page_Unloaded">
 
-	<Grid>
+	<Page.Resources>
+		<local:ValueToStringConverter x:Key="ToStringD2"/>
+	</Page.Resources>
+
+	<Grid Padding="16,0,16,16">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="2*"/>
 			<ColumnDefinition Width="1*"/>
@@ -22,11 +26,11 @@
 		</Grid>
 		<Grid x:Name="Grid_PCMParameterRoot" Grid.Column="1" Padding="8,8,8,8">
 			<StackPanel Orientation="Vertical" Margin="8,8,8,8">
-				<Button x:Name="Button_ResetParameters" Click="Button_ResetParameters_Click"
+				<Button x:Name="Button_ResetParameters" Click="Button_ResetParameters_ClickAsync"
 						Style="{StaticResource ButtonRevealStyle}" Content="Reset" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Right"/>
 
 				<Grid  Margin="0,8,0,0">
-					<Button x:Name="Button" Click="Button_ClickAsync"
+					<Button x:Name="Button_GeneratingSignal" Click="Button_GeneratingSignal_ClickAsync"
 					Style="{StaticResource ButtonRevealStyle}" HorizontalAlignment="Stretch">
 						<TextBlock Text="GetSignals"/>
 					</Button>
@@ -45,7 +49,7 @@
 				<StackPanel Margin="0,8,0,8">
 					<Grid>
 						<TextBlock Text="Duration"/>
-						<TextBlock Text="{x:Bind Slider_Duration.Value.ToString(),Mode=OneWay}" 
+						<TextBlock Text="{x:Bind Slider_Duration.Value, Converter={StaticResource ToStringD2}, Mode=OneWay}" 
 									HorizontalAlignment="Right" MinWidth="8"/>
 					</Grid>
 					<Slider x:Name="Slider_Duration"
@@ -55,7 +59,7 @@
 				<StackPanel Margin="0,8,0,8">
 					<Grid>
 						<TextBlock Text="Frequency"/>
-						<TextBlock Text="{x:Bind Slider_Frequency.Value.ToString(),Mode=OneWay}" 
+						<TextBlock Text="{x:Bind Slider_Frequency.Value, Converter={StaticResource ToStringD2}, Mode=OneWay}" 
 									HorizontalAlignment="Right" MinWidth="8"/>
 					</Grid>
 					<Slider x:Name="Slider_Frequency"
@@ -64,43 +68,45 @@
 				<StackPanel Margin="0,8,0,8">
 					<Grid>
 						<TextBlock Text="Amplitude"/>
-						<TextBlock Text="{x:Bind Slider_Amplitude.Value.ToString(),Mode=OneWay}" 
+						<TextBlock Text="{x:Bind Slider_Amplitude.Value, Converter={StaticResource ToStringD2}, Mode=OneWay}" 
 									HorizontalAlignment="Right" MinWidth="8"/>
 					</Grid>
 					<Slider x:Name="Slider_Amplitude"
-							Value="10" Minimum="1" SmallChange="1"/>
+							Value="10" Minimum="1" Maximum="50" SmallChange="1"/>
 				</StackPanel>
-
+				<Button x:Name="Button_DoCoding" Click="Button_DoCoding_ClickAsync"
+						Style="{StaticResource ButtonRevealStyle}" Margin="0,8,0,8" HorizontalAlignment="Stretch">
+					<TextBlock Text="Coding" />
+				</Button>
 				<StackPanel Orientation="Vertical" Margin="0,8,0,8">
-					<TextBlock Text="Code"/>
-					<Grid Margin="0,8,0,8">
+					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="1*"/>
 							<ColumnDefinition Width="1*"/>
 						</Grid.ColumnDefinitions>
-						<Grid Grid.Column="0" Margin="0,0,4,0">
+						<StackPanel Grid.Column="0" Margin="0,0,4,0">
+							<TextBlock Text="PCM" HorizontalAlignment="Center"/>
 							<ListView x:Name="ListView_PCM" ScrollViewer.VerticalScrollBarVisibility="Auto" 
-									MinHeight="200" MaxHeight="500" BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="4" 
-								  >
+									MinHeight="200" MaxHeight="500" BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="4" >
 								<ListView.ItemTemplate>
 									<DataTemplate x:DataType="local:PCMListView_Item">
 										<TextBlock Text="{x:Bind Value}" x:Phase="1"/>
 									</DataTemplate>
 								</ListView.ItemTemplate>
 							</ListView>
-						</Grid>
+						</StackPanel>
 
-						<Grid Grid.Column="1" Margin="4,0,0,0">
+						<StackPanel Grid.Column="1" Margin="4,0,0,0">
+							<TextBlock Text="ADPCM" HorizontalAlignment="Center"/>
 							<ListView x:Name="ListView_ADPCM" ScrollViewer.VerticalScrollBarVisibility="Auto"
-									  MinHeight="200" MaxHeight="500" BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="4"
-								  >
+									  MinHeight="200" MaxHeight="500" BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="4">
 								<ListView.ItemTemplate>
 									<DataTemplate x:DataType="local:PCMListView_Item">
 										<TextBlock Text="{x:Bind Value}" x:Phase="1" Margin="0,2,0,2"/>
 									</DataTemplate>
 								</ListView.ItemTemplate>
 							</ListView>
-						</Grid>
+						</StackPanel>
 					</Grid>
 
 				</StackPanel>
@@ -110,8 +116,21 @@
 
 		</Grid>
 		<Grid Grid.Column="2">
-			<TextBlock Text="Coded Signal" HorizontalAlignment="Center" />
-			<canvas:CanvasControl x:Name="canvas_Right" Draw="canvas_Right_Draw"/>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="1*"/>
+			</Grid.RowDefinitions>
+			<TextBlock Text="Decode Signal" HorizontalAlignment="Center" />
+			<Grid Grid.Row="0">
+				<TextBlock Text="PCM" HorizontalAlignment="Right"/>
+				<canvas:CanvasControl x:Name="canvas_Right_PCM" Draw="canvas_Right_PCM_Draw"/>
+			</Grid>
+			<Grid Grid.Row="1">
+				<TextBlock Text="ADPCM" HorizontalAlignment="Right"/>
+				<canvas:CanvasControl x:Name="canvas_Right_ADPCM" Draw="canvas_Right_ADPCM_Draw"/>
+			</Grid>
+
+
 		</Grid>
 
 		<!--<Pivot Grid.Row="0">

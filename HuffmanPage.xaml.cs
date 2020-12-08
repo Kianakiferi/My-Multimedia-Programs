@@ -116,7 +116,7 @@ namespace MultimediaApp
 			if (codingStr != "" && !String.IsNullOrWhiteSpace(codingStr))
 			{
 				huffman = new HuffmanCoding();
-				keyAndValues = null;
+				keyAndValues = new Dictionary<char, string>();
 
 				string huffmanCoded = huffman.StringToHuffmanCode(out keyAndValues, codingStr);
 

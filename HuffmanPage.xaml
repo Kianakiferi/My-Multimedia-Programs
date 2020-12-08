@@ -8,12 +8,13 @@
 	xmlns:muxc="using:Windows.UI.Xaml.Controls"
 	mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-	<Grid>
+	
+	
+	<Grid Padding="0,0,0,16">
 		<Pivot>
 			<PivotItem Header="TXT">
 				<Grid x:Name="HuffmanPage_Txt_Grid" AllowDrop="True" DragEnter="HuffmanPage_Txt_Grid_DragEnter" DragOver="HuffmanPage_Txt_Grid_DragOver" Drop="HuffmanPage_Txt_Grid_Drop" 
-					  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,8,0,8" >
+					  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 					<Rectangle Stroke="#FF303030" RadiusX="5" RadiusY="5" StrokeThickness="3" StrokeDashCap="Round" StrokeDashArray="5,5"/>
 					<Grid>
 						<Grid.RowDefinitions>
@@ -66,7 +67,7 @@
 							</Button>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" FlowDirection="RightToLeft">
-							<Button x:Name="Btm_CleanAll" Click="Btm_CleanAll_Click" Content="Clean" Style="{StaticResource ButtonRevealStyle}"  Margin="8,0,8,0" />
+							<Button x:Name="Btm_CleanAll" Click="Btm_CleanAll_Click" Content="Clean" Style="{StaticResource ButtonRevealStyle}"  Margin="0,0,8,0" />
 							<Button x:Name="Btm_ShowDictionary" Click="Btm_ShowDictionary_ClickAsync" Content="Dictionary" Style="{StaticResource ButtonRevealStyle}" Margin="8,0,8,0">
 								<FlyoutBase.AttachedFlyout>
 									<Flyout Placement="Bottom">
@@ -87,9 +88,13 @@
 						<!--
 				<Rectangle Grid.Column="0" RadiusX="3" RadiusY="3"  StrokeThickness="3" Stroke="Gray" Margin="-2,0,0,0"/>
 				<Rectangle Grid.Column="1" RadiusX="3" RadiusY="3"  StrokeThickness="3" Stroke="Gray" Margin="-2,0,0,0"/>
-				-->
-						<TextBox x:Name="TextBox_Left" Grid.Column="0" TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,6,6,6"/>
-						<TextBox x:Name="TextBox_Right" Grid.Column="1" TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,6,6,6"/>
+				-->		
+						<TextBox x:Name="TextBox_Left" Grid.Column="0" TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False" 
+								 ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,6,6,6" 
+								 BorderBrush="#FF303030" BorderThickness="2" CornerRadius="4,0,0,4"/>
+						<TextBox x:Name="TextBox_Right" Grid.Column="1" TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False" 
+								 ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10,6,6,6" 
+								 BorderBrush="#FF303030" BorderThickness="2" CornerRadius="0,4,4,0"/>
 
 						<ContentDialog x:Name="Dialog_ShowDictionary"
 								Title="Dictionary"

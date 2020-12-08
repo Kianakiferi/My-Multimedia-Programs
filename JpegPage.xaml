@@ -14,7 +14,7 @@
 		</Style>
 	</Page.Resources>
 
-	<Grid>
+	<Grid Padding="16,0,16,16">
 		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto"/>
@@ -23,32 +23,32 @@
 			<Grid Grid.Row="0">
 				<Button x:Name="BtmOpenFile" Click="BtmOpenFile_ClickAsnyc" Padding="8,7,8,8"
 						Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"  HorizontalAlignment="Left">
-							<StackPanel Orientation="Horizontal">
-								<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8E5;" />
-								<TextBlock Text="Open File" Margin="8,0,0,0" />
-							</StackPanel>
-						</Button>
-				<ToggleButton x:Name="toggleButton" Content="ToggleButton" Padding="8,7,8,8"
+					<StackPanel Orientation="Horizontal">
+						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8E5;" />
+						<TextBlock Text="Open A File" Margin="8,0,0,0" />
+					</StackPanel>
+				</Button>
+				<ToggleButton x:Name="toggleButton" Content="ToggleButton"
 							  Style="{StaticResource ToggleButtonRevealStyle}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
 							  HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.ZIndex="30" Height="40"  />
 
 			</Grid>
-
-			<Rectangle Grid.Row="1" Fill="#FF222222" RadiusX="10" RadiusY="10" />
 			<Grid Grid.Row="1">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="1*"/>
 					<ColumnDefinition Width="1*"/>
 				</Grid.ColumnDefinitions>
 
-				<Grid Grid.Column="0" BorderThickness="0,0,2,0" BorderBrush="#FF303030" Padding="0,0,8,0" >
+				<Grid Grid.Column="0" 
+					  BorderThickness="2,2,2,2" BorderBrush="#FF303030" CornerRadius="4,0,0,4" Padding="0,0,8,0" >
 					<StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
 						<Image x:Name="ImgOriginal" Stretch="Uniform" MinHeight="32" MinWidth="32"/>
 
 
 					</StackPanel>
 				</Grid>
-				<Grid Grid.Column="1"  BorderBrush="#FF303030" Padding="8,0,0,0" BorderThickness="2,0,0,0">
+				<Grid Grid.Column="1"  
+					  BorderThickness="2,2,2,2" BorderBrush="#FF303030" CornerRadius="0,4,4,0" Padding="8,0,0,0">
 					<Image x:Name="ImgConvert"/>
 				</Grid>
 			</Grid>

@@ -21,16 +21,16 @@ namespace MultimediaApp
 	//信号List
 	public class Signal
 	{
-		public LinkedList<Sample> samples;
+		public LinkedList<Sample> sampleList;
 
 		public Signal(double duration, double samplingFrequency)
 		{
-			this.samples = new LinkedList<Sample>();
+			this.sampleList = new LinkedList<Sample>();
 
 			double time = 0;
 			while (time < duration)
 			{
-				samples.AddLast(new Sample(time, 0));
+				sampleList.AddLast(new Sample(time, 0));
 				time += (1 / samplingFrequency);
 			}
 		}
@@ -42,7 +42,7 @@ namespace MultimediaApp
 			Sample sample;
 
 			//遍历查找最大
-			foreach (var item in samples)
+			foreach (var item in sampleList)
 			{
 				sample = item;
 				value = Math.Abs(sample.value);
@@ -116,8 +116,8 @@ namespace MultimediaApp
 				while (time < duration)
 				{
 					value = signalFunction.CalculateSignalValueFor(time);
-					accumulatedValue = signal.samples.ElementAt(index).value;
-					signal.samples.ElementAt(index).value = value + accumulatedValue;
+					accumulatedValue = signal.sampleList.ElementAt(index).value;
+					signal.sampleList.ElementAt(index).value = value + accumulatedValue;
 					time += 1 / samplingFrequency;
 					index += 1;
 				}
@@ -364,7 +364,7 @@ namespace MultimediaApp
 			Sample sample;
 			string pcmBits;
 
-			foreach (var item in signal.samples)
+			foreach (var item in signal.sampleList)
 			{
 				sample = item;
 				pcmBits = CodeSample(sample, quantizationStep);
@@ -412,7 +412,7 @@ namespace MultimediaApp
 			double value;
 			Sample sample;
 
-			foreach (var item in signal.samples)
+			foreach (var item in signal.sampleList)
 			{
 				sample = item;
 				value = Math.Abs(sample.value);
@@ -609,10 +609,8 @@ namespace MultimediaApp
 
 		public LinkedList<ADPCMFrame> EncodeADPCMFrames(LinkedList<PCMFrame> pcmFrames)
 		{
-
 			//Data
 			LinkedList<ADPCMFrame> adpcmFrames = new LinkedList<ADPCMFrame>();
-
 
 			//INIT VALUES
 			stepSizeBuffer.bufferedValue = 16;
